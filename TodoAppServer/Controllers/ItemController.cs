@@ -28,7 +28,6 @@ namespace TodoAppServer.Controllers
 
         }
 
-
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoItem>> GetItemById(string id)
         {

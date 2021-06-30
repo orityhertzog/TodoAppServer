@@ -84,7 +84,7 @@ namespace TodoAppServer.Controllers
             {
                 var list = await _repo.DeleteList(id);
                 return Ok(list);
-            }            catch (ArgumentNullException e)
+            }catch (ArgumentNullException e)
             {
                 return NotFound(e.Message);
             }catch(Exception e)

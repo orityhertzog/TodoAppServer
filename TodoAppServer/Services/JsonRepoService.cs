@@ -16,9 +16,10 @@ namespace TodoAppServer.Services
         private readonly string itemsUrl, listsUrl;
         private readonly string itemsPath, listsPath;
 
-        public JsonRepoService(IConfiguration configuration) {
-            this.itemsUrl = configuration["jsonItemsUrl"];   
-            this.listsUrl = configuration["jsonListsUrl"];   
+        public JsonRepoService(IConfiguration configuration)
+        {
+            this.itemsUrl = configuration["jsonItemsUrl"];
+            this.listsUrl = configuration["jsonListsUrl"];
             this.itemsPath = Path.Combine(Directory.GetCurrentDirectory(), "Data", itemsUrl);
             this.listsPath = Path.Combine(Directory.GetCurrentDirectory(), "Data", listsUrl);
         }
@@ -27,7 +28,7 @@ namespace TodoAppServer.Services
         {
             var allItems = await GetAllItems();
             var id = Guid.NewGuid().ToString();
-            var newItem = new TodoItem(Id: id, ListId: item.ListId, Caption: item.Caption, IsCompleted: item.IsCompleted);
+            var newItem = new TodoItem(id, item.ListId, item.Caption, item.IsCompleted);
             allItems.Add(newItem);
             var objectsAsJson = JsonConvert.SerializeObject(allItems);
             await File.WriteAllTextAsync(itemsPath, objectsAsJson);
@@ -38,7 +39,7 @@ namespace TodoAppServer.Services
         {
             var allLists = await GetAllLists();
             var id = Guid.NewGuid().ToString();
-            var newList = new TodoList(Id: id, Caption: list.Caption, Description: list.Description, IconName: list.IconName, Color: list.Color);
+            var newList = new TodoList(id, list.Caption, list.Description, list.IconName, list.Color);
             allLists.Add(newList);
             var objectsAsJson = JsonConvert.SerializeObject(allLists);
             await File.WriteAllTextAsync(listsPath, objectsAsJson);
@@ -47,13 +48,13 @@ namespace TodoAppServer.Services
 
         public async Task<TodoItem> DeleteItem(string id)
         {
-            if(id == null)
+            if (id == null)
             {
                 throw new ArgumentNullException("the id is null");
             }
             var allItems = await GetAllItems();
             var itemToDelete = allItems.Where(item => item.Id == id).SingleOrDefault();
-            if(itemToDelete == null)
+            if (itemToDelete == null)
             {
                 throw new ArgumentNullException("the object does not exist");
             }
@@ -85,10 +86,10 @@ namespace TodoAppServer.Services
             allLists.Remove(specificList);
             var listsAsJson = JsonConvert.SerializeObject(allLists);
             await File.WriteAllTextAsync(listsPath, listsAsJson);
-            return specificList;  
+            return specificList;
         }
 
-        public async Task<TodoItem> EditItem(string id,TodoItem item)
+        public async Task<TodoItem> EditItem(string id, TodoItem item)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -171,6 +172,20 @@ namespace TodoAppServer.Services
                 throw new ArgumentNullException("the object does not exist");
             }
             return specificList;
+        }
+
+        private void isObjectNull(object specificObj)
+        {
+            if (specificObj == null)
+                throw new ArgumentNullException("the object does not exist");
+        }
+
+        private void IsIdNull(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new ArgumentNullException("the id is null");
+            }
         }
     }
 }
