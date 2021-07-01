@@ -48,16 +48,10 @@ namespace TodoAppServer.Services
 
         public async Task<TodoItem> DeleteItem(string id)
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException("the id is null");
-            }
+            IsIdNull(id);
             var allItems = await GetAllItems();
             var itemToDelete = allItems.Where(item => item.Id == id).SingleOrDefault();
-            if (itemToDelete == null)
-            {
-                throw new ArgumentNullException("the object does not exist");
-            }
+            isObjectNull(id);
             allItems.Remove(itemToDelete);
             var itemsAsJson = JsonConvert.SerializeObject(allItems);
             await File.WriteAllTextAsync(itemsPath, itemsAsJson);
@@ -67,16 +61,10 @@ namespace TodoAppServer.Services
 
         public async Task<TodoList> DeleteList(string id)
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException("the id is null");
-            }
+            IsIdNull(id);
             var allLists = await GetAllLists();
             var specificList = allLists.Where(list => list.Id == id).SingleOrDefault();
-            if (specificList == null)
-            {
-                throw new ArgumentNullException("the object does not exist");
-            }
+            isObjectNull(specificList);
             var allItems = await GetAllItems();
             var allListItems = allItems.Where(item => item.ListId == specificList.Id);
             foreach (var item in allListItems)
@@ -91,16 +79,10 @@ namespace TodoAppServer.Services
 
         public async Task<TodoItem> EditItem(string id, TodoItem item)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException("the id is null");
-            }
+            IsIdNull(id);
             var allItems = await GetAllItems();
             var specificItem = allItems.Where(i => i.Id == item.Id).SingleOrDefault();
-            if (specificItem == null)
-            {
-                throw new ArgumentNullException("the object does not exist");
-            }
+            isObjectNull(specificItem);
             allItems.Remove(specificItem);
             allItems.Add(item);
             var itemsAsJson = JsonConvert.SerializeObject(allItems);
@@ -110,16 +92,10 @@ namespace TodoAppServer.Services
 
         public async Task<TodoList> EditList(string id, TodoList list)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException("the id is null");
-            }
+            IsIdNull(id);
             var allLists = await GetAllLists();
             var specificList = allLists.Where(l => l.Id == list.Id).SingleOrDefault();
-            if (specificList == null)
-            {
-                throw new ArgumentNullException("the object does not exist");
-            }
+            isObjectNull(specificList);
             allLists.Remove(specificList);
             allLists.Add(list);
             var listsAsJson = JsonConvert.SerializeObject(allLists);
@@ -145,32 +121,19 @@ namespace TodoAppServer.Services
 
         public async Task<TodoItem> GetItemById(string id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException("the id is null");
-            }
+            IsIdNull(id);
             var allItems = await GetAllItems();
             var specificItem = allItems.Where(item => item.Id.Equals(id)).DefaultIfEmpty(null).Single();
-            if (specificItem == null)
-            {
-                throw new ArgumentNullException("the object does not exist");
-            }
-
+            isObjectNull(specificItem);
             return specificItem;
         }
 
         public async Task<TodoList> GetListById(string id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException("the id is null");
-            }
+            IsIdNull(id);
             var allLists = await GetAllLists();
             var specificList = allLists.Where(lists => lists.Id.Equals(id)).DefaultIfEmpty(null).Single();
-            if (specificList == null)
-            {
-                throw new ArgumentNullException("the object does not exist");
-            }
+            isObjectNull(specificList);
             return specificList;
         }
 
